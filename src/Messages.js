@@ -37,8 +37,10 @@ function FirstMessageFromUser({ message, showDay }) {
     <div key={message.id}>
       {showDay && (
         <div className="Day">
-          <div className="DayText">03/05/2019</div>
           <div className="DayLine" />
+          <div className="DayText">
+            {new Date(message.createdAt.seconds * 1000).toLocaleDateString()}
+          </div>
           <div className="DayLine" />
         </div>
       )}
@@ -69,7 +71,12 @@ function shouldShowDay(previus, message) {
     return true
   }
 
-  const isNewDay = !isSameDay()
+  const isNewDay = !isSameDay(
+    previus.createdAt.seconds * 1000,
+    message.createdAt.seconds * 1000
+  )
+
+  return isNewDay
 }
 
 function shouldShowAvatar(previus, message) {
