@@ -1,14 +1,31 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import useCollection from './useCollection'
 import useDocWithCache from './useDocWithCache'
 import formatDate from 'date-fns/format'
-import { isSameDay } from 'date-fns/is_same_day'
+import isSameDay from 'date-fns/is_same_day'
+
+function useChatScrollManager(ref) {
+  const shouldScroll = true
+  useEffect(() => {
+    if (shouldScroll) {
+      const node = ref.current
+      node.scrollTop = node.scrollHeight
+    }
+  })
+}
+
+function ChatScroller(props) {
+  const scrollerRef = useRef()
+  useChatScrollManager(scrollerRef)
+
+  return <div {...props} ref={scrollerRef} />
+}
 
 function Messages({ channelId }) {
   const messages = useCollection(`channels/${channelId}/messages`, 'createdAt')
 
   return (
-    <div className="Messages">
+    <ChatScroller className="Messages">
       <div className="EndOfMessages">That's every massage!</div>
       {messages.map((message, index) => {
         const previus = message[index - 1]
@@ -27,12 +44,13 @@ function Messages({ channelId }) {
           </div>
         )
       })}
-    </div>
+    </ChatScroller>
   )
 }
 
 function FirstMessageFromUser({ message, showDay }) {
   const author = useDocWithCache(message.user.path)
+
   return (
     <div key={message.id}>
       {showDay && (

@@ -1,8 +1,8 @@
 import React from 'react'
-import useDoc from './useDoc'
+import useDocWithCache from './useDocWithCache'
 
 function ChannelInfo({ channelId }) {
-  const channel = useDoc(`channels/${channelId}`)
+  const channel = useDocWithCache(`channels/${channelId}`)
   return (
     <div className="ChannelInfo">
       <div className="Topic">
